@@ -1,15 +1,13 @@
 import { useState } from 'react';
-// import { addContact } from 'Redux/contactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-// import { arrContacts } from 'Redux/contactsSlice';
 import { selectContacts } from 'Redux/selectors';
-import { addContact } from 'Redux/operations';
+import { addContact } from '../../Redux/operations';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const allContacts = useSelector(selectContacts);
 
   const onSubmit = e => {
@@ -17,7 +15,7 @@ export const ContactForm = () => {
 
     const uniqueName = name.toLowerCase().trim();
     const uniqueNumber = phone.toLowerCase().trim();
-    console.log(uniqueName, uniqueNumber);
+
     if (
       allContacts.find(
         ({ name }) => name.toLocaleLowerCase().trim() === uniqueName
@@ -39,8 +37,9 @@ export const ContactForm = () => {
       return;
     }
     const id = nanoid();
-    console.log(name, phone, id);
-    addContact({ name, phone, id });
+    // const newContact = { name, phone, id };
+    // addContact(newContact);
+    dispatch(addContact({ name, phone, id }));
     setName('');
     setPhone('');
   };
