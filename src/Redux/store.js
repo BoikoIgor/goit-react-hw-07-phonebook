@@ -15,6 +15,10 @@ export const store = configureStore({
     contacts: persistReducer(persistConfig, contactsReducer),
     filter: filterReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export const persistor = persistStore(store);

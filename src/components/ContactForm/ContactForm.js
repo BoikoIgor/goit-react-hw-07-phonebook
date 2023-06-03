@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { addContact } from 'components/Redux/contactsSlice';
+import { addContact } from 'Redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-import { arrContacts } from 'components/Redux/contactsSlice';
+import { arrContacts } from 'Redux/contactsSlice';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
