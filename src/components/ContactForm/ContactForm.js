@@ -1,20 +1,23 @@
 import { useState } from 'react';
-import { addContact } from 'Redux/contactsSlice';
+// import { addContact } from 'Redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-import { arrContacts } from 'Redux/contactsSlice';
+// import { arrContacts } from 'Redux/contactsSlice';
+import { selectContacts } from 'Redux/selectors';
+import { addContact } from 'Redux/operations';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const dispatch = useDispatch();
-  const allContacts = useSelector(arrContacts);
+  const [phone, setPhone] = useState('');
+  // const dispatch = useDispatch();
+  const allContacts = useSelector(selectContacts);
 
   const onSubmit = e => {
     e.preventDefault();
 
     const uniqueName = name.toLowerCase().trim();
-    const uniqueNumber = number.toLowerCase().trim();
+    const uniqueNumber = phone.toLowerCase().trim();
+    console.log(uniqueName, uniqueNumber);
     if (
       allContacts.find(
         ({ name }) => name.toLocaleLowerCase().trim() === uniqueName
@@ -27,18 +30,19 @@ export const ContactForm = () => {
     }
     if (
       allContacts.find(
-        ({ number }) => number.toLocaleLowerCase().trim() === uniqueNumber
+        ({ phone }) => phone.toLocaleLowerCase().trim() === uniqueNumber
       )
     ) {
       alert(
-        `Please enter another number. ${number} is already exists in your contacts`
+        `Please enter another number. ${phone} is already exists in your contacts`
       );
       return;
     }
     const id = nanoid();
-    dispatch(addContact({ name, number, id }));
+    console.log(name, phone, id);
+    addContact({ name, phone, id });
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -77,9 +81,9 @@ export const ContactForm = () => {
         <input
           style={{ width: '40%' }}
           type="tel"
-          name="number"
-          value={number}
-          onChange={e => setNumber(e.target.value)}
+          name="phone"
+          value={phone}
+          onChange={e => setPhone(e.target.value)}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required

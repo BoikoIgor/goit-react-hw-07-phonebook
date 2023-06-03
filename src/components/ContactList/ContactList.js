@@ -1,31 +1,44 @@
-import { arrContacts, delContact } from 'Redux/contactsSlice';
-import { filterValue } from 'Redux/filterSlice';
+import {
+  selectError,
+  selectFilterContacts,
+  selectIsLoading,
+} from 'Redux/selectors';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts, deleteContact } from '../../Redux/operations';
 
 export const ContactList = () => {
-  // const contactsList = useSelector(arrContacts);
-  const filter = useSelector(filterValue);
+  const filterContacts = useSelector(selectFilterContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const dispatch = useDispatch();
-  const filteredContacts = useSelector(arrContacts).filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-  if (!filteredContacts?.length) {
-    return <div>Not found. Try something else</div>;
-  }
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  const onDelContact = id => {
+    dispatch(deleteContact(id));
+  };
+
   return (
     <ul>
-      {filteredContacts.map(contact => (
-        <li key={contact.id} style={{ marginBottom: '0.5rem' }}>
-          {contact.name}:{' '}
+      {isLoading && <div>Loading...</div>}
+      {!filterContacts?.length && !error && !isLoading && (
+        <div>Not found. Try something else</div>
+      )}
+      {error && <div>{error}</div>}
+
+      {filterContacts.map(({ id, name, phone }) => (
+        <li key={id} style={{ marginBottom: '0.5rem' }}>
+          {name}:{' '}
           <span>
-            <b>{contact.number}</b>
+            <b>{phone}</b>
           </span>
           <button
             style={{ marginLeft: '0.7rem', fontSize: '0.7rem' }}
             type="button"
-            onClick={() => {
-              dispatch(delContact(contact.id));
-            }}
+            onClick={() => onDelContact(id)}
           >
             Delete
           </button>
