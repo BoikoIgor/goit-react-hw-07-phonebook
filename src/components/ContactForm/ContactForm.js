@@ -39,9 +39,22 @@ export const ContactForm = () => {
     const id = nanoid();
     // const newContact = { name, phone, id };
     // addContact(newContact);
-    dispatch(addContact({ name, phone, id }));
-    setName('');
-    setPhone('');
+    dispatch(addContact({ name, phone, id }))
+      .then(result => {
+        // Assuming the API response contains a success flag or specific data indicating success
+        if (result.meta.requestStatus === 'fulfilled') {
+          setName('');
+          setPhone('');
+          return;
+        }
+        alert(`Something went wrong. Сontact was not added`);
+      })
+      .catch(error => {
+        // Handle error if necessary
+        console.error(error);
+      });
+    // setName('');
+    // setPhone('');
   };
 
   return (
